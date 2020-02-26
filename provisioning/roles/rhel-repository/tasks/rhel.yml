@@ -1,0 +1,12 @@
+---
+- name: Download EPEL repository for RHEL/CentOS {{ ansible_distribution_major_version }}
+  get_url:
+    url: "{{ epel_url }}/{{ epel_version }}.noarch.rpm"
+    dest: "{{ download_dir }}/{{ epel_version }}.noarch.rpm"
+  tags: [repository, epel]
+
+- name: Install EPEL repository
+  yum:
+    name: "{{ download_dir }}/{{ epel_version }}.noarch.rpm"
+    state: present
+  tags: [repository, epel]

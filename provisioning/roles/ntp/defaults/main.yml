@@ -1,0 +1,3 @@
+---
+timezone: 'Asia/Ho_Chi_Minh'
+ntp_pool: 'vn.pool.ntp.org'

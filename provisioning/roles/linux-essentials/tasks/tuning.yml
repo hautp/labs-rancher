@@ -1,0 +1,94 @@
+---
+- name: Increase soft fd limits
+  pam_limits:
+    domain: "*"
+    limit_type: soft
+    limit_item: nofile
+    value: '65535'
+  tags: [tuning]
+
+- name: Increase hard fd limits
+  pam_limits:
+    domain: "*"
+    limit_type: hard
+    limit_item: nofile
+    value: '1000000'
+  tags: [tuning]
+
+- name: Increase send buffer size (wmem) and receive buffer size (rmem)
+  sysctl:
+    name: "{{ item.name }}"
+    value: '{{ item.value}}'
+    state: present
+  with_items:
+    - { name: "net.core.wmem_max", value: "67108864" }
+    - { name: "net.core.rmem_max", value: "67108864" }
+    - { name: "net.ipv4.tcp_rmem", value: "4096 87380 33554432" }
+    - { name: "net.ipv4.tcp_wmem", value: "4096 87380 33554432" }
+  tags: [tuning]
+
+- name: Minimun the amount of swapping
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: "vm.swappiness", value: "10" }
+    - { name: "vm.dirty_ratio", value: "60" }
+    - { name: "vm.dirty_background_ratio", value: "5" }
+  tags: [tuning]
+
+- name: Increase the maximum amount of memory buffers
+  sysctl:
+    name: "net.core.optmem_max"
+    value: "25165824"
+    state: present
+  tags: [tuning]
+
+- name: Increase size of file handles and inode cache
+  sysctl:
+    name: "fs.file-max"
+    value: "2097152"
+    state: present
+  tags: [tuning]
+
+- name: Allow local port range
+  sysctl:
+    name: "net.ipv4.ip_local_port_range"
+    value: "2000 65535"
+    state: present
+  tags: [tuning]
+
+- name: Decrease the time default value for tcp_fin_timeout connection
+  sysctl:
+    name: "net.ipv4.tcp_fin_timeout"
+    value: "30"
+    state: present
+  tags: [tuning]
+
+- name: Incrase number of inconming connections and connections backlog
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: "net.core.somaxconn", value: "4096" }
+    - { name: "net.core.netdev_max_backlog", value: "65536" }
+  tags: [tuning]
+
+- name: Increase the maximun total buffer-space allocatable
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: "net.ipv4.tcp_mem", value: "65536 131072 262144" }
+    - { name: "net.ipv4.udp_mem", value: "65536 131072 262144" }
+  tags: [tuning]
+
+- name: Disable if do not use IPv6
+  sysctl:
+    name: "net.ipv6.conf.all.disable_ipv6"
+    value: "1"
+    state: present
+  tags: [tuning]

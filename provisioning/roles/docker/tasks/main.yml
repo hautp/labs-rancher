@@ -1,0 +1,7 @@
+---
+- name: Install Docker frm Rancher
+  shell: "curl https://releases.rancher.com/install-docker/18.09.sh | sh"
+
+- name: Allow user system admin could use docker without sudo
+  shell: "usermod -aG docker {{ item.username }}"
+  with_items: "{{ defined_users }}"

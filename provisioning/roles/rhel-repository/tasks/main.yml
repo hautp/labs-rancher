@@ -1,0 +1,3 @@
+---
+- name: Include RHEL's tasks
+  include_tasks: rhel.yml

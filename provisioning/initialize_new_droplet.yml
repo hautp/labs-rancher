@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - { role: rhel-repository, when: ansible_os_family == 'RedHat' }
+    - linux-essentials
+    - ntp
+    - docker
+  vars:
+    defined_users:
+    - { username: "hautran", groups: "system_admin", shell: "/bin/bash" }
+    users_authorized_keys:
+    - { username: "hautran", path_pub_keys: "{{ playbook_dir }}/public_keys"}

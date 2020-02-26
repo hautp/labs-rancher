@@ -1,0 +1,4 @@
+---
+- nanme: Install Docker from Rancher
+  shell: curl https://releases.rancher.com/install-docker/18.09.sh | sh
+
