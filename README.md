@@ -4,7 +4,7 @@
 ### - Topology
 > Note: In this lab, I used `CentOS` like a main OS to install Rancher and Kubernetes.
 
-![Topology_Vagrant](topology_vagrant.png)
+![Topology_Vagrant](imgs/topology_vagrant.png)
 
 ### - Create droplets and load bootstrap
 
