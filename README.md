@@ -36,7 +36,7 @@ The output example:
 
 ## 2. Deploy Rancher HA on single node
 ### - Topology
-Image!
+![Topology_Rancher](imgs/topology_rancher_single_node.png) 
 
 ### - Deploy and run Rancher on nodes using Docker
 
@@ -144,7 +144,7 @@ docker run -d --name ha_rancher \
 
 ## 3. Create custom K8S cluster from RKE
 ### - Topology
-Image!
+![Topology_RKE](imgs/topology_rke_rancher.png)
 
 ### - Define topology K8S with `rke` command
 
