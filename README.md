@@ -142,3 +142,78 @@ docker run -d --name ha_rancher \
 	-v /opt/rancher_ha.conf:/etc/nginx/conf.d/rancher_ha.conf \
 	nginx:latest 
 ```
+
+## 3. Create custom K8S cluster from RKE
+### Topology
+Image!
+
+### Define topology K8S with `rke` command
+
+- You could create empty file `cluster.yml` from `rke` command
+```bash
+rke config --empty
+```
+
+- Or input value into prompt from `rke` command following below command
+```bash
+rke config 
+```
+
+The output example:
+```
+[+] Cluster Level SSH Private Key Path [~/.ssh/id_rsa]: ~/.ssh/id_rsa
+[+] Number of Hosts [1]: **5**
+[+] SSH Address of host (1) [none]: **192.168.57.10**
+[+] SSH Port of host (1) [22]:
+[+] SSH Private Key Path of host (192.168.57.10) [none]:
+[-] You have entered empty SSH key path, trying fetch from SSH key parameter
+...
+[+] Add another addon [no]: no
+```
+
+- Building K8S from RKE
+```bash
+rke up --config cluster.yml
+```
+
+You must wait a few moments to `rke` create K8S cluster.
+
+- Verify after RKE build K8S successfully
+```bash
+export KUBECONFIG=$(pwd)/kube_config_rancher-cluster.yml
+```
+
+```bash
+kubectl get nodes
+```
+
+```
+NAME            STATUS   ROLES               AGE     VERSION
+192.168.57.10   Ready    controlplane,etcd   11m   v1.17.2
+192.168.57.11   Ready    controlplane,etcd   11m   v1.17.2
+192.168.57.12   Ready    controlplane,etcd   11m   v1.17.2
+192.168.57.20   Ready    worker              11m   v1.17.2
+192.168.57.21   Ready    worker              11m   v1.17.2
+```
+
+- Check health's pods on K8S cluster
+```bash
+kubectl get pods --all-namespaces
+```
+
+```
+NAME                                      READY   STATUS      RESTARTS   AGE
+canal-29ppn                               2/2     Running     2          11m
+canal-8hpvv                               2/2     Running     2          11m
+canal-d82zk                               2/2     Running     2          11m
+canal-t5pqq                               2/2     Running     2          11m
+canal-t6gk5                               2/2     Running     2          11m
+coredns-7c5566588d-b8cv2                  1/1     Running     1          11m
+coredns-7c5566588d-fr4j5                  1/1     Running     1          11m
+coredns-autoscaler-65bfc8d47d-mgjs9       1/1     Running     1          11m
+metrics-server-6b55c64f86-nnlxv           1/1     Running     1          11m
+rke-coredns-addon-deploy-job-wp8wg        0/1     Completed   0          11m
+rke-ingress-controller-deploy-job-n24z8   0/1     Completed   0          11m
+rke-metrics-addon-deploy-job-tp9j7        0/1     Completed   0          11m
+rke-network-plugin-deploy-job-wx7bj       0/1     Completed   0          11m
+```
