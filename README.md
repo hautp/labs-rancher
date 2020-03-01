@@ -16,7 +16,17 @@ vagrant up
 
 The output example:
 ```
-123
+Bringing machine 'master01' up with 'virtualbox' provider...
+Bringing machine 'master02' up with 'virtualbox' provider...
+Bringing machine 'master03' up with 'virtualbox' provider...
+Bringing machine 'worker01' up with 'virtualbox' provider...
+Bringing machine 'worker02' up with 'virtualbox' provider...
+==> master01: Importing base box 'centos/7'...
+==> master01: Matching MAC address for NAT networking...
+==> master01: Setting the name of the VM: Rancher_master01_1583083529736_93604
+==> master01: Clearing any previously set network interfaces...
+...
+==> master01: Running provisioner: ansible...
 ```
 
 You have to wait for a moments to `Vagrant` create VMs and load Ansible bootstrap. 
@@ -31,7 +41,13 @@ vagrant status
 
 The output example:
 ```
-123
+Current machine states:
+
+master01                  running (virtualbox)
+master02                  running (virtualbox)
+master03                  running (virtualbox)
+worker01                  running (virtualbox)
+worker02                  running (virtualbox)
 ```
 
 ## 2. Deploy Rancher HA on single node
