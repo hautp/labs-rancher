@@ -1,24 +1,28 @@
 # Labs Rancher
 
-## Create droplets and run Ansible bootstrap
-### 1. Topology
+## 1. Create droplets and run Ansible bootstrap
+### Topology
 > Note: In this lab, I used `CentOS` like a main OS to install Rancher and Kubernetes.
+Image!
 
-### 2. Using `Vagrant` to create VMs from `Vagrantfile` and `Ansible` will load **initialize_new_droplet.yml** playbook to install necessary software (included **update packages** and install **repository**, **ntp**, **docker**).
+### Create droplets and load bootstrap
+
+Using `Vagrant` to create VMs from `Vagrantfile` and `Ansible` will load **initialize_new_droplet.yml** playbook to install necessary software (included **update packages** and install **repository**, **ntp**, **docker**).
 
 ```bash
 vagrant up
 ```
 
-You have to Wait for a moments to `Vagrant` create VMs and load Ansible bootstrap. 
-
-### 3. After `Vagrant` ran provisioning, you could verify with below command:
-
-```bash
-vagrant global-status
+The output example:
+```
+123
 ```
 
-Or
+You have to wait for a moments to `Vagrant` create VMs and load Ansible bootstrap. 
+
+
+### Verify droplets status 
+After `Vagrant` ran provisioning, you could verify with below command:
 
 ```bash
 vagrant status
@@ -29,11 +33,11 @@ The output example:
 123
 ```
 
-## Deploy Rancher HA on single node
-### 1. Topology
+## 2. Deploy Rancher HA on single node
+### Topology
+Image!
 
-
-### 2. Deploy and run Rancher on nodes using Docker
+### Deploy and run Rancher on nodes using Docker
 
 Login into CentOS host and run installation command below:
 
@@ -76,7 +80,7 @@ docker run -d --restart=unless-stopped \
 With:
 - **<YOUR.DNS.NAME>** - Your domain address
 
-### 3. Config HA for Rancher by using Nginx (or HAProxy)
+### Config HA for Rancher by using Nginx (or HAProxy)
 
 > In this lab, I will use Nginx (docker) to HA for 2 Rancher nodes.
 
