@@ -1,11 +1,12 @@
 # Labs Rancher
 
 ## 1. Create droplets and run Ansible bootstrap
-### Topology
+### - Topology
 > Note: In this lab, I used `CentOS` like a main OS to install Rancher and Kubernetes.
-Image!
 
-### Create droplets and load bootstrap
+![Topology_Vagrant](topology_vagrant.png)
+
+### - Create droplets and load bootstrap
 
 Using `Vagrant` to create VMs from `Vagrantfile` and `Ansible` will load **initialize_new_droplet.yml** playbook to install necessary software (included **update packages** and install **repository**, **ntp**, **docker**).
 
@@ -21,7 +22,7 @@ The output example:
 You have to wait for a moments to `Vagrant` create VMs and load Ansible bootstrap. 
 
 
-### Verify droplets status 
+### - Verify droplets status 
 After `Vagrant` ran provisioning, you could verify with below command:
 
 ```bash
@@ -34,10 +35,10 @@ The output example:
 ```
 
 ## 2. Deploy Rancher HA on single node
-### Topology
+### - Topology
 Image!
 
-### Deploy and run Rancher on nodes using Docker
+### - Deploy and run Rancher on nodes using Docker
 
 Login into CentOS host and run installation command below:
 
@@ -60,7 +61,6 @@ docker run -d --restart=unless-stopped \
 	rancher/rancher:latest
 ```
 
-With:
 - **<CERT_DIRECTORY>** - The path to the directory containing your certificate files. 
 - **<FULL_CHAIN.pem>** - The path to your full certificate chain.
 - **<PRIVATE_KEY.pem>** - The path to the private key for you certificate.
@@ -77,10 +77,9 @@ docker run -d --restart=unless-stopped \
 	--acme-domain <YOUR.DNS.NAME>
 ```
 
-With:
 - **<YOUR.DNS.NAME>** - Your domain address
 
-### Config HA for Rancher by using Nginx (or HAProxy)
+### - Config HA for Rancher by using Nginx (or HAProxy)
 
 > In this lab, I will use Nginx (docker) to HA for 2 Rancher nodes.
 
@@ -144,17 +143,17 @@ docker run -d --name ha_rancher \
 ```
 
 ## 3. Create custom K8S cluster from RKE
-### Topology
+### - Topology
 Image!
 
-### Define topology K8S with `rke` command
+### - Define topology K8S with `rke` command
 
 - You could create empty file `cluster.yml` from `rke` command
 ```bash
 rke config --empty
 ```
 
-- Or input value into prompt from `rke` command following below command
+- Or input value into prompt from `rke` command following below step
 ```bash
 rke config 
 ```
@@ -162,8 +161,8 @@ rke config
 The output example:
 ```
 [+] Cluster Level SSH Private Key Path [~/.ssh/id_rsa]: ~/.ssh/id_rsa
-[+] Number of Hosts [1]: **5**
-[+] SSH Address of host (1) [none]: **192.168.57.10**
+[+] Number of Hosts [1]: 5
+[+] SSH Address of host (1) [none]: 192.168.57.10
 [+] SSH Port of host (1) [22]:
 [+] SSH Private Key Path of host (192.168.57.10) [none]:
 [-] You have entered empty SSH key path, trying fetch from SSH key parameter
@@ -171,7 +170,9 @@ The output example:
 [+] Add another addon [no]: no
 ```
 
-- Building K8S from RKE
+### - Build and verify K8S cluster from RKE 
+- Create K8S cluster from `cluster.yml`
+
 ```bash
 rke up --config cluster.yml
 ```
@@ -179,6 +180,7 @@ rke up --config cluster.yml
 You must wait a few moments to `rke` create K8S cluster.
 
 - Verify after RKE build K8S successfully
+
 ```bash
 export KUBECONFIG=$(pwd)/kube_config_rancher-cluster.yml
 ```
