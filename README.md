@@ -1,10 +1,10 @@
 # Labs Rancher
 
 ## Create droplets and run Ansible bootstrap
-1. Topology
+### 1. Topology
 > Note: In this lab, I used `CentOS` like a main OS to install Rancher and Kubernetes.
 
-2. Firstly, using `Vagrant` to create VMs from `Vagrantfile` and `Ansible` will load **initialize_new_droplet.yml** playbook to install necessary software (included **update packages** and install **repository**, **ntp**, **docker**).
+### 2. Using `Vagrant` to create VMs from `Vagrantfile` and `Ansible` will load **initialize_new_droplet.yml** playbook to install necessary software (included **update packages** and install **repository**, **ntp**, **docker**).
 
 ```bash
 vagrant up
@@ -12,7 +12,7 @@ vagrant up
 
 You have to Wait for a moments to `Vagrant` create VMs and load Ansible bootstrap. 
 
-3. After `Vagrant` ran provisioning, you could verify with below command:
+### 3. After `Vagrant` ran provisioning, you could verify with below command:
 
 ```bash
 vagrant global-status
@@ -30,14 +30,14 @@ The output example:
 ```
 
 ## Deploy Rancher HA on single node
-1. Topology
+### 1. Topology
 
 
-2. Run Rancher on nodes using Docker
+### 2. Deploy and run Rancher on nodes using Docker
 
 Login into CentOS host and run installation command below:
 
-**Option A: Default Rancher-generated Seft-signed certificate.**
++ **Option A: Default Rancher-generated Seft-signed certificate.**
 
 ```bash
 docker run -d --restart=unless-stopped \
@@ -45,7 +45,7 @@ docker run -d --restart=unless-stopped \
 	rancher/rancher:latest
 ```
 
-**Option B: Install Rancher with own certificate.**
++ **Option B: Install Rancher with own certificate.**
 
 ```bash
 docker run -d --restart=unless-stopped \
@@ -58,11 +58,12 @@ docker run -d --restart=unless-stopped \
 
 With:
 - **<CERT_DIRECTORY>** - The path to the directory containing your certificate files. 
-- <FULL_CHAIN.pem> - The path to your full certificate chain.
-- <PRIVATE_KEY.pem> - The path to the private key for you certificate.
-- <CA_CERTS> - The path to the certificate authoriity's certificate.
+- **<FULL_CHAIN.pem>** - The path to your full certificate chain.
+- **<PRIVATE_KEY.pem>** - The path to the private key for you certificate.
+- **<CA_CERTS>** - The path to the certificate authoriity's certificate.
 
-**Option C: Let's Encrypt Certificate**
++ **Option C: Let's Encrypt Certificate**
+
 You must point A record with the hostname that you want to use the Rancher access to the IP of the machine it is running on.
 
 ```bash
@@ -73,9 +74,10 @@ docker run -d --restart=unless-stopped \
 ```
 
 With:
-- <YOUR.DNS.NAME> - Your domain address
+- **<YOUR.DNS.NAME>** - Your domain address
 
-3. Config HA for Rancher by using Nginx (or HAProxy)
+### 3. Config HA for Rancher by using Nginx (or HAProxy)
+
 > In this lab, I will use Nginx (docker) to HA for 2 Rancher nodes.
 
 - Create `rancher_ha.conf` on node that will be run nginx docker
