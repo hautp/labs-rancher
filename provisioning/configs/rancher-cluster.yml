@@ -1,5 +1,6 @@
 ---
 cluster_name: "hautran.com"
+kubernetes_version: "v1.17.2-rancher1-2"
 nodes:
   - address: 192.168.57.10
     port: "22"
@@ -30,4 +31,4 @@ ingress:
   provider: nginx
   options:
     use-forwarded-headers: "true"
-ssh_key_path: /home/hautran/Private/PrivateKeys/rke_local
+ssh_key_path: /home/hautran/Private/github/labs-rancher/provisioning/private_keys/hautran

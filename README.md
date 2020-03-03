@@ -1,8 +1,11 @@
 # Labs Rancher
 ## Indexes
 1. [Create droplets and run Ansible bootstrap](https://github.com/hautp/labs-rancher/tree/dev#1-create-droplets-and-run-ansible-bootstrap)
+
 2. [Deploy Rancher HA on single node](https://github.com/hautp/labs-rancher/tree/dev#2-deploy-rancher-ha-on-single-node)
-3. [Create custom K8S cluster from RKE](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke)
+
+3. [Create custom K8S cluster from RKE and deploy Rancher on K8S](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke)
+
 4. [Build and deploy a mini service to k8s cluster](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke)
 
 ## 1. Create droplets and run Ansible bootstrap
@@ -164,17 +167,17 @@ docker run -d --name ha_rancher \
 ```
 
 ## 3. Create custom K8S cluster from RKE and deploy Rancher on K8S
-### - 3.1. Topology
+### - Topology
 ![Topology_RKE](imgs/topology_rke_rancher.png)
 
-### - Define topology K8S with `rke` command
+### - Define topology and create K8S cluster by using `rke` command
 
-- You could create empty file `cluster.yml` from `rke` command
+- **Method 1: You could create empty file `cluster.yml` from `rke` command**
 ```bash
 rke config --empty
 ```
 
-- Or input value into prompt from `rke` command following below step
+- **Method 2: Input value into prompt from `rke` command following below step**
 ```bash
 rke config 
 ```
@@ -191,8 +194,7 @@ The output example:
 [+] Add another addon [no]: no
 ```
 
-### - 3.2. Build and verify K8S cluster from RKE 
-- Create K8S cluster from `cluster.yml`
+Create K8S cluster from `cluster.yml`
 
 ```bash
 rke up --config cluster.yml
@@ -200,7 +202,38 @@ rke up --config cluster.yml
 
 You must wait a few moments to `rke` create K8S cluster.
 
-- Verify after RKE build K8S successfully
+- **Method 3: Using Ansible playbook rke-cluster.yml to install RKE cluster**
+
+View content of rke-cluster.yml and define some variables like `rke_k8s_version`, `cluster_name`, ...
+
+```bash
+cat provisioning/rke-cluster.yml
+```
+
+```yaml
+---
+- hosts: all
+  roles:
+    - docker
+    - rke-cluster
+  vars:
+    defined_users:
+      - { username: "hautran", rke_ssh_public_key: "{{ playbook_dir }}/public_keys/hautran.pub", rke_ssh_private_key: "{{ playbook_dir }}/private_keys/hautran" }
+    # Currently, RKE supported K8S version v1.17.2, v1.16.6, v1.15.9
+    rke_k8s_version: "v1.17.2-rancher1-2"
+    rke_cluster_name: "hautran.com"
+    rke_ingress: "nginx"
+```
+
+Provisioning RKE cluster by using `ansible-playbook` command
+
+```bash
+ansible-playbook -i inventory/hau.tran rke-cluster.yml
+```
+
+Ansible will create rancher-cluster.yml, kube_config_rancher-cluster.yml, rancher-cluster.rkestate on folder `configs`.
+
+### - Verify after RKE build K8S successfully
 
 ```bash
 export KUBECONFIG=$(pwd)/kube_config_rancher-cluster.yml
@@ -241,4 +274,4 @@ rke-metrics-addon-deploy-job-tp9j7        0/1     Completed   0          11m
 rke-network-plugin-deploy-job-wx7bj       0/1     Completed   0          11m
 ```
 
-### - 3.3. Deploy Rancher on K8S cluster
+### - Deploy Rancher on K8S cluster

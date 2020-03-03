@@ -4,9 +4,10 @@
     - docker
     - rke-cluster
   vars:
+    defined_users:
+      - { username: "hautran", rke_ssh_public_key: "{{ playbook_dir }}/public_keys/hautran.pub", rke_ssh_private_key: "{{ playbook_dir }}/private_keys/hautran" }
+
     # Currently, RKE supported K8S version v1.17.2, v1.16.6, v1.15.9
-    rke_k8s_version: "v1.17.2"
-    rke_ssh_user: "hautran"
+    rke_k8s_version: "v1.17.2-rancher1-2"
     rke_cluster_name: "hautran.com"
-    rke_ssh_private_key: "{{ playbook_dir }}/private_keys/hautran"
     rke_ingress: "nginx"
