@@ -163,8 +163,8 @@ docker run -d --name ha_rancher \
 	nginx:latest 
 ```
 
-## 3. Create custom K8S cluster from RKE
-### - Topology
+## 3. Create custom K8S cluster from RKE and deploy Rancher on K8S
+### - 3.1. Topology
 ![Topology_RKE](imgs/topology_rke_rancher.png)
 
 ### - Define topology K8S with `rke` command
@@ -191,7 +191,7 @@ The output example:
 [+] Add another addon [no]: no
 ```
 
-### - Build and verify K8S cluster from RKE 
+### - 3.2. Build and verify K8S cluster from RKE 
 - Create K8S cluster from `cluster.yml`
 
 ```bash
@@ -240,3 +240,5 @@ rke-ingress-controller-deploy-job-n24z8   0/1     Completed   0          11m
 rke-metrics-addon-deploy-job-tp9j7        0/1     Completed   0          11m
 rke-network-plugin-deploy-job-wx7bj       0/1     Completed   0          11m
 ```
+
+### - 3.3. Deploy Rancher on K8S cluster

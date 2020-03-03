@@ -1,0 +1,6 @@
+---
+- name: Generate RKE config file
+  local_action:
+    module: "template"
+    src: rancher-cluster.yml.j2
+    dest: "{{ rke_cluster_config }}"

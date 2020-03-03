@@ -1,0 +1,3 @@
+---
+- name: Create RKE Cluster from config file
+  local_action: shell "rke up --config {{ playbook_dir }}/configs/rancher-cluster.yml"

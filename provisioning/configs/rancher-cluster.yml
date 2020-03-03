@@ -1,0 +1,33 @@
+---
+cluster_name: "hautran.com"
+nodes:
+  - address: 192.168.57.10
+    port: "22"
+    user: hautran
+    role: [controlplane, etcd]
+  - address: 192.168.57.11
+    port: "22"
+    user: hautran
+    role: [controlplane, etcd]
+  - address: 192.168.57.12
+    port: "22"
+    user: hautran
+    role: [controlplane, etcd]
+  - address: 192.168.57.20
+    port: "22"
+    user: hautran
+    role: [worker]
+  - address: 192.168.57.21
+    port: "22"
+    user: hautran
+    role: [worker]
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+ingress:
+  provider: nginx
+  options:
+    use-forwarded-headers: "true"
+ssh_key_path: /home/hautran/Private/PrivateKeys/rke_local

@@ -1,0 +1,7 @@
+---
+# Path
+download_dir: "/usr/src"
+
+# Docker
+docker_version: "18.09"
+docker_url: "https://releases.rancher.com/install-docker/{{ docker_version }}.sh"

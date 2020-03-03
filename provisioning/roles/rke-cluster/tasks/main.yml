@@ -1,4 +1,9 @@
 ---
-- nanme: Install Docker from Rancher
-  shell: curl https://releases.rancher.com/install-docker/18.09.sh | sh
+- name: Preparing for create RKE cluster
+  include_tasks: prerequisites.yml
 
+- name: Generate cluster.yml config file for RKE
+  include_tasks: generate_cluster_config.yml
+
+- name: Create RKE Cluster
+  include_tasks: create_rke_cluster.yml

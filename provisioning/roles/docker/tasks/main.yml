@@ -1,7 +1,22 @@
 ---
-- name: Install Docker frm Rancher
-  shell: "curl https://releases.rancher.com/install-docker/18.09.sh | sh"
+- name: Download script from Rancher
+  get_url:
+    url: "{{ docker_url }}"
+    dest: "{{ download_dir }}/docker_{{ docker_version }}.sh"
+
+- name: Install Docker from Rancher script
+  shell: "sh docker_{{ docker_version }}.sh"
+  args:
+    chdir: "{{ download_dir }}"
+  register: installed_docker
 
 - name: Allow user system admin could use docker without sudo
   shell: "usermod -aG docker {{ item.username }}"
   with_items: "{{ defined_users }}"
+
+- name: Start and set onboot Docker service"
+  service:
+    name: "docker"
+    state: restarted
+    enabled: yes
+  when: installed_docker.rc == 0
