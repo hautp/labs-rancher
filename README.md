@@ -137,7 +137,7 @@ upstream ha_rancher_https {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
-        proxy_pass http://ha_rancher;
+        proxy_pass http://ha_rancher_http;
     }
 }
 
@@ -152,7 +152,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
-        proxy_pass http://ha_rancher;
+        proxy_pass http://ha_rancher_https;
     }
 }
 ```
@@ -204,7 +204,7 @@ You must wait a few moments to `rke` create K8S cluster.
 
 - **Method 3: Using Ansible playbook rke-cluster.yml to install RKE cluster**
 
-View content of rke-cluster.yml and define some variables like `rke_k8s_version`, `cluster_name`, ...
+View content of `rke-cluster.yml` and define some variables like `rke_k8s_version`, `cluster_name`, ...
 
 ```bash
 cat provisioning/rke-cluster.yml
@@ -231,7 +231,7 @@ Provisioning RKE cluster by using `ansible-playbook` command
 ansible-playbook -i inventory/hau.tran rke-cluster.yml
 ```
 
-Ansible will create rancher-cluster.yml, kube_config_rancher-cluster.yml, rancher-cluster.rkestate on folder `configs`.
+Ansible will create `rancher-cluster.yml`, `kube_config_rancher-cluster.yml`, `rancher-cluster.rkestate` on folder `configs`.
 
 ### - Verify after RKE build K8S successfully
 
@@ -275,3 +275,114 @@ rke-network-plugin-deploy-job-wx7bj       0/1     Completed   0          11m
 ```
 
 ### - Deploy Rancher on K8S cluster
+- Using `helm` to install `tiller` on K8S
+
+```bash
+kubectl -n kube-system create serviceaccount tiller
+
+kubectl create clusterrolebinding tiller \
+  --clusterrole=cluster-admin \
+  --serviceaccount=kube-system:tiller
+
+helm init --service-account tiller
+```
+
+- Verify the installation of `tiller` on cluster
+
+```bash
+helm version
+```
+
+```
+Client: &version.Version{SemVer:"v2.14.3", GitCommit:"0e7f3b6637f7af8fcfddb3d2941fcc7cbebb0085", GitTreeState:"clean"}
+Server: &version.Version{SemVer:"v2.14.3", GitCommit:"0e7f3b6637f7af8fcfddb3d2941fcc7cbebb0085", GitTreeState:"clean"}
+```
+
+- Add the Helm chart repository
+
+```bash
+helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+```
+
+- Install cert-manager
+
+> Note: `cert-manager` is only required for certificates issued by Rancher's generate CA (`ingress.tls.source=rancher`) and Let's Encrypt issued certificates (`ingress.tls.source=letsEncrypt`). 
+
+Install the CustomResourceDefinition resource
+```bash
+kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.9/deploy/manifests/00-crds.yaml
+```
+
+Create the namespace for `cert-manager`
+```bash
+kubectl create namespace cert-manager
+kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+```
+
+Add Helm repository
+```bash
+helm repo add jetstack https://charts.jetstack.io
+```
+
+Update local Helm chart repository
+```bash
+helm repo update
+```
+
+Install `cert-manager`
+```bash
+helm install \
+  --name cert-manager \
+  --namespace cert-manager \
+  --version v0.9.1 \
+  jetstack/cert-manager
+```
+
+
+- Install Rancher from Helm
+
+**Method 1: Using Rancher Generated Certificates**
+Set the `hostname` to the DNS name you pointed to your LB.
+
+```bash
+helm install rancher-stable/rancher \
+  --name rancher \
+  --namespace cattle-system \
+  --set hostname=hautran.com
+```
+
+**Method 2: Using Let's Encrypt**
+```bash
+helm install rancher-stable/rancher \
+  --name rancher \
+  --namespace cattle-system \
+  --set hostname=hautran.com \
+  --set ingress.tls.source=letsEncrypt \
+  --set letsEncrypt.email=me@example.org
+```
+
+- Verify the installation of Rancher
+
+```bash
+kubectl get deployments -n cattle-system
+```
+
+```
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+rancher   3/3     3            3           51m
+```
+
+```bash
+k8 get pods -n cattle-system
+```
+
+```
+NAME                      READY   STATUS    RESTARTS   AGE
+rancher-ddf788bbf-c8vgr   1/1     Running   3          52m
+rancher-ddf788bbf-txg8k   1/1     Running   3          52m
+rancher-ddf788bbf-x6v74   1/1     Running   5          52m
+```
+
+- Login Rancher via web browser
+
+![Rancher_WebUI](imgs/rancher_webui.png)
