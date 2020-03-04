@@ -147,7 +147,6 @@ server {
     ssl_certificate /etc/ssl/certs/hautran.com/fullchain.pem;
     ssl_certificate_key /etc/ssl/certs/hautran.com/privkey.pem;
 
-
     location / {
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
