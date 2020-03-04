@@ -4,7 +4,7 @@
 
 2. [Deploy Rancher HA on single node](https://github.com/hautp/labs-rancher/tree/dev#2-deploy-rancher-ha-on-single-node)
 
-3. [Create custom K8S cluster from RKE and deploy Rancher on K8S](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke)
+3. [Create custom K8S cluster from RKE and deploy Rancher on K8S](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke-and-deploy-rancher-on-k8s)
 
 4. [Build and deploy a mini service to k8s cluster](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke)
 
@@ -342,6 +342,7 @@ helm install \
 - Install Rancher from Helm
 
 **Method 1: Using Rancher Generated Certificates**
+
 Set the `hostname` to the DNS name you pointed to your LB.
 
 ```bash
@@ -352,6 +353,7 @@ helm install rancher-stable/rancher \
 ```
 
 **Method 2: Using Let's Encrypt**
+
 ```bash
 helm install rancher-stable/rancher \
   --name rancher \
