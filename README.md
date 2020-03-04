@@ -128,7 +128,7 @@ upstream ha_rancher_https {
 
  server {
     listen 80;
-    server_name rancher.hautp.local;
+    server_name hautran.com;
 
     location / {
         proxy_http_version 1.1;
@@ -142,8 +142,11 @@ upstream ha_rancher_https {
 }
 
 server {
-    listen 443;
-    server_name rancher.hautp.local;
+    listen 443 ssl;
+    server_name hautran.com;
+    ssl_certificate /etc/ssl/certs/hautran.com/fullchain.pem;
+    ssl_certificate_key /etc/ssl/certs/hautran.com/privkey.pem;
+
 
     location / {
         proxy_http_version 1.1;
