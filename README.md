@@ -6,7 +6,7 @@
 
 3. [Create custom K8S cluster from RKE and deploy Rancher on K8S](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke-and-deploy-rancher-on-k8s)
 
-4. [Build and deploy a mini service to k8s cluster](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke)
+4. [Build and deploy a mini service to k8s cluster](https://github.com/hautp/labs-rancher/tree/dev#4-build-and-deploy-a-mini-service-to-k8s-cluster)
 
 ## 1. Create droplets and run Ansible bootstrap
 ### - Topology
