@@ -1,0 +1,4 @@
+---
+download_dir: "/usr/src"
+epel_version: "epel-release-latest-{{ ansible_distribution_major_version }}"
+epel_url: "http://dl.fedoraproject.org/pub/epel"

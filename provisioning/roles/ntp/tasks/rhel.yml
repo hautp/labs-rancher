@@ -1,0 +1,25 @@
+---
+- name: Remove/Unlink localtime
+  file:
+    path: "/etc/localtime"
+    state: "absent"
+  tags: [ntp]
+
+- name: Symlink localtime to specific timezone
+  file:
+    src: "/usr/share/zoneinfo/{{ timezone }}"
+    dest: "/etc/localtime"
+    owner: "root"
+    group: "root"
+    state: link
+  tags: [ntp]
+
+- name: Install ntpdate package
+  package:
+    name: "ntpdate"
+    state: present
+  tags: [ntp]
+
+- name: Synchonize the timezone
+  shell: ntpdate -s "{{ ntp_pool }}"
+  tags: [ntp]

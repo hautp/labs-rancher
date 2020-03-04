@@ -1,0 +1,29 @@
+---
+- name: Disable SElinux
+  selinux:
+    state: disabled
+  tags: [disable_selinux, common]
+
+- name: Disable NetworkManager service
+  service:
+    name: NetworkManager
+    state: stopped
+    enabled: no
+  tags: [disable_nm, common]
+
+- name: Set hostname
+  hostname:
+    name: '{{ inventory_hostname }}'
+  tags: [set_hostname, common]
+
+- name: Disable UseDNS option in ssh config
+  lineinfile:
+    dest: '/etc/ssh/sshd_config'
+    backup: yes
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+    - regexp: '^(#)?UseDNS.+'
+      line: 'UseDNS no'
+  notify: restart sshd
+  tags: [disable_usedns, common]

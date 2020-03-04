@@ -1,0 +1,20 @@
+---
+cluster_name: "{{ rke_cluster_name }}"
+kubernetes_version: "{{ rke_k8s_version }}"
+nodes:
+{% for host in ansible_play_hosts %}
+  - address: {{ hostvars[host].ansible_host }}
+    port: "{{ hostvars[host].ansible_ssh_port }}"
+    user: {{ defined_users[0]['username'] }}
+    role: [{{ hostvars[host].rke_node_roles }}]
+{% endfor %}
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+ingress:
+  provider: {{ rke_ingress }}
+  options:
+    use-forwarded-headers: "true"
+ssh_key_path: {{ defined_users[0]['rke_ssh_private_key'] }}

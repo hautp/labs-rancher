@@ -1,0 +1,11 @@
+[rke-internal]
+rke-master01 ansible_host=192.168.57.10 rke_node_roles="controlplane, etcd"
+rke-master02 ansible_host=192.168.57.11 rke_node_roles="controlplane, etcd"
+rke-master03 ansible_host=192.168.57.12 rke_node_roles="controlplane, etcd"
+rke-worker01 ansible_host=192.168.57.20 rke_node_roles="worker"
+rke-worker02 ansible_host=192.168.57.21 rke_node_roles="worker"
+
+[rke-internal:vars]
+asible_connection=ssh
+ansible_user=root
+ansible_ssh_port=22

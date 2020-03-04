@@ -1,0 +1,19 @@
+- name: Install necessary packages
+  package:
+    name:
+      - vim
+      - wget
+      - telnet
+      - net-tools
+      - ngrep
+      - tcpdump
+      - wireshark
+      - vnstat
+    state: latest
+  tags: [install_packages]
+
+- name: Update all packages
+  package:
+    name: "*"
+    state: latest
+  tags: [install_packages]

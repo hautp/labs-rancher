@@ -1,0 +1,12 @@
+---
+- name: Install necessary packages
+  include_tasks: install_packages.yml
+
+- name: Preparing system accounts
+  include_tasks: users.yml
+
+- name: Common tasks
+  include_tasks: common.yml
+
+- name: Tuning tasks
+  include_tasks: tuning.yml

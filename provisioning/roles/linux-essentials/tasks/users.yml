@@ -1,0 +1,38 @@
+---
+- name: Create system groups
+  group:
+    name: "{{ item.groups }}"
+    state: present
+  with_items: "{{ defined_users }}"
+  tags: [create_groups, users]
+
+- name: Create system accounts
+  user:
+    name: "{{ item.username }}"
+    groups: "{{ item.groups }}"
+    shell: "{{ item.shell }}"
+    append: yes
+    state: present
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+  with_items: "{{ defined_users }}"
+  register: is_new_user
+  tags: [create_users, users]
+
+- name: Add authorized keys to system accounts
+  authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ lookup('file', '{{ item.path_pub_keys }}/{{ item.username }}.pub') }}"
+  with_items: "{{ users_authorized_keys }}"
+  tags: [authorized_keys, users]
+
+- name: Allow system accounts could sudo without password•
+  lineinfile:
+    dest: "/etc/sudoers"
+    insertafter: "^root.*ALL$"
+    regex: "^{{ item.username }} .*"
+    line: "{{ item.username }} ALL=(ALL) NOPASSWD: ALL"
+    state: present
+  with_items: "{{ defined_users }}"
+  tags: [update_sudoers, users]

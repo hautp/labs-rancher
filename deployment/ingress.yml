@@ -1,0 +1,23 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: simple-app-ingress
+  namespace: apps
+  annotations:
+    certmanager.k8s.io/issuer: rancher
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
+spec:
+  rules:
+  - host: webapp.hautran.com
+    http:
+      paths:
+      - backend:
+          serviceName: simple-app-svc
+          servicePort: 5000
+  tls:
+  - hosts:
+    - webapp.hautran.com
+    secretName: tls-rancher-ingress
