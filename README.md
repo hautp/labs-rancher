@@ -388,3 +388,152 @@ rancher-ddf788bbf-x6v74   1/1     Running   5          52m
 - Login Rancher via web browser
 
 ![Rancher_WebUI](imgs/rancher_webui.png)
+
+## 4. Build and deploy a mini service to k8s cluster
+I have a source code that written by Flask at https://github.com/hautp/simple-app. 
+I will use this source code to build docker image following below steps.
+
+- Clone source code from Git
+
+```bash
+git clone https://github.com/hautp/simple-app.git
+```
+
+- Build image from Dockerfile
+
+```bash
+cd simple-app
+docker build -t "simple-app" .
+```
+
+- Push image to Docker Hub
+
+```bash
+docker tag simple_app:latest hautran/simple_app:latest
+docker push hautran/simple_app:latest
+```
+
+- Preparing deployment, service and ingress files to deploy
+
+```bash
+vim deployment.yml
+```
+
+```yaml
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: simple-app-deployment
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-app
+  template:
+    metadata:
+      labels:
+        app: simple-app
+    spec:
+      containers:
+      - name: simple-app
+        image: hautran/simple_app:latest
+        ports:
+        - name: web
+          containerPort: 5000
+```
+
+```bash
+vim service.yml
+```
+
+```yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-app-svc
+  namespace: apps
+spec:
+  selector:
+    app: simple-app
+  ports:
+  - name: web
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+```
+
+```bash
+cat ingress.yml
+```
+
+```yaml
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: simple-app-ingress
+  namespace: apps
+  annotations:
+    certmanager.k8s.io/issuer: rancher
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
+spec:
+  rules:
+  - host: webapp.hautran.com
+    http:
+      paths:
+      - backend:
+          serviceName: simple-app-svc
+          servicePort: 5000
+  tls:
+  - hosts:
+    - webapp.hautran.com
+    secretName: tls-rancher-ingress
+```
+
+- Deploy to RKE cluster
+```bash
+kubectl create namespaces apps
+
+kubectl apply -f deployment.yml 
+kubectl apply -f service.yml 
+kubectl apply -f ingress.yml
+```
+
+- Verify the deployment
+```bash
+kubectl get deployments -n apps
+```
+
+```
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+simple-app-deployment   1/1     1            1           3h6m
+```
+
+- Verify the service
+
+```bash
+kubectl get svc -n apps
+```
+
+```
+NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+simple-app-svc   ClusterIP   10.43.242.67   <none>        5000/TCP   87m
+```
+
+- Verify the ingress
+```bash
+kubectl get ingresses -n apps
+```
+
+```
+NAME                 HOSTS                ADDRESS                       PORTS     AGE
+simple-app-ingress   webapp.hautran.com   192.168.57.20,192.168.57.21   80, 443   23m
+```
+
+- Using web browser to access app
+![Simple_App_UI](imgs/SimpleApp_UI.png)
