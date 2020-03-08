@@ -1,12 +1,12 @@
 # Labs Rancher
 ## Indexes
-1. [Create droplets and run Ansible bootstrap](https://github.com/hautp/labs-rancher/tree/dev#1-create-droplets-and-run-ansible-bootstrap)
+1. [Create droplets and run Ansible bootstrap](#1-create-droplets-and-run-ansible-bootstrap)
 
-2. [Deploy Rancher HA on single node](https://github.com/hautp/labs-rancher/tree/dev#2-deploy-rancher-ha-on-single-node)
+2. [Deploy Rancher HA on single node](#2-deploy-rancher-ha-on-single-node)
 
-3. [Create custom K8S cluster from RKE and deploy Rancher on K8S](https://github.com/hautp/labs-rancher/tree/dev#3-create-custom-k8s-cluster-from-rke-and-deploy-rancher-on-k8s)
+3. [Create custom K8S cluster from RKE and deploy Rancher on K8S](#3-create-custom-k8s-cluster-from-rke-and-deploy-rancher-on-k8s)
 
-4. [Build and deploy a mini service to k8s cluster](https://github.com/hautp/labs-rancher/tree/dev#4-build-and-deploy-a-mini-service-to-k8s-cluster)
+4. [Build and deploy a mini service to k8s cluster](#4-build-and-deploy-a-mini-service-to-k8s-cluster)
 
 ## 1. Create droplets and run Ansible bootstrap
 ### - Topology
